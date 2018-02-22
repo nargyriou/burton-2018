@@ -5,7 +5,6 @@ local function parser(fd)
 		if not txtline then break end
 		local row = {}
 		for c in txtline:gmatch("(.)") do
-			print(c)
 			table.insert(row, c)
 		end
 		table.insert(data, row)
