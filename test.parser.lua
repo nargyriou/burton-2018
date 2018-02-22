@@ -11,7 +11,7 @@ local function levelchanged(lvl, cfg)
 	else
 		cfg.inline=false
 		cfg.indent=""
-		cfg.list_sep=', '
+		cfg.list_sep=','
 	end
 	return cfg
 end
@@ -21,5 +21,11 @@ local function dump(matrix)
 		levelchanged=levelchanged,
 	})
 end
-
+local function dumptofile(matrix,file)
+	local tprint=require"tprint"
+	local fd = io.open(file,"w")
+	fd:write("return "..tprint(matrix, {inline=true}))
+end
+--dumptofile(matrix,"data1.lua")
 print(dump(matrix))
+
