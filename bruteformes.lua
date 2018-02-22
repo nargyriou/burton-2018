@@ -24,10 +24,10 @@ local function bruteforme(cellno)
 	return results
 end
 
-local res = bruteforme(9)
-for i,v in pairs(res) do
-	printRect(v[1], v[2])
-	print("")
-end
+-- local res = bruteforme(9)
+-- for i,v in pairs(res) do
+-- 	printRect(v[1], v[2])
+-- 	print("")
+-- end
 
 return bruteforme
