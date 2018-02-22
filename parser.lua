@@ -1,12 +1,15 @@
 local function parser(fd)
 	local data = {}
 	while true do
-		local txtline = fd:read("*l)
+		local txtline = fd:read("*l")
+		if not txtline then break end
 		local row = {}
-		for c in ("."):gmatch(txtline) do
+		for c in txtline:gmatch("(.)") do
+			print(c)
 			table.insert(row, c)
 		end
 		table.insert(data, row)
 	end
+	return data
 end
 return parser
