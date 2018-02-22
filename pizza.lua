@@ -1,13 +1,17 @@
 local tprint = require("tprint")
 
-local T = 1
-local M = 2
+local input = require "parsed.small"
+local mapvalues = require "mapvalues"
 
 
-local R = 6
-local C = 7
-local L = 1
-local H = 5
+local T = mapvalues.T -- 1
+local M = mapvalues.M -- 2
+
+
+local R = input.R -- 6
+local C = input.C -- 7
+local L = input.L -- 1
+local H = input.H -- 5
 
 -- local R = 3
 -- local C = 5
