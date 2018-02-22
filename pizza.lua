@@ -1,7 +1,7 @@
 local tprint = require("tprint")
 local bruteforme = require("bruteformes")
 
-local input = require "parsed.small"
+local input = require "parsed.medium"
 local mapvalues = require "mapvalues"
 
 
@@ -14,34 +14,14 @@ local C = input.C -- 7
 local L = input.L -- 1
 local H = input.H -- 5
 
--- local R = 3
--- local C = 5
--- local L = 1
--- local H = 6
-
--- local input = {
---   {T, T, T, T, T},
---   {T, M, M, M, T},
---   {T, T, T, T, T}
--- }
-
-local input = {
-  {T, M, M, M, T, T, T},
-  {M, M, M, M, T, M, M},
-  {T, T, M, T, T, M, T},
-  {T, M, M, T, M, M, M},
-  {T, T, T, T, T, T, M},
-  {T, T, T, T, T, T, M}
-}
-
 local rects = bruteforme(H)
 
 local tab = {}
 
-for _, row in pairs(input) do
+for _, row in ipairs(input) do
   local r = {}
 
-  for _, cell in pairs(row) do
+  for _, cell in ipairs(row) do
     table.insert(r, {
       val = cell,
       rects = {},
@@ -59,7 +39,7 @@ function does_it_fit(tab, pos, rect, needed)
   local t_count = 0
   local m_count = 0
 
-  print("does_it_fit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ", " .. needed .. ")")
+  -- print("does_it_fit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ", " .. needed .. ")")
 
   for i = y, y + h - 1 do
     for j = x, x + w - 1 do
@@ -85,7 +65,7 @@ function visit(tab, pos, rect)
   local x, y = unpack(pos)
   local w, h = unpack(rect)
   local rect = {x, y, w, h}
-  print("visit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ")")
+  -- print("visit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ")")
 
   for i = y, y + h - 1 do
     for j = x, x + w - 1 do
