@@ -1,7 +1,9 @@
 local parser = require "parser"
 local fd = io.stdin
 local firstline = fd:read("*l")
-local matrix = parser(fd)
+local map = {["T"]=1, ["M"]=2 } -- map the value
+
+local matrix = parser(fd,map)
 
 local function levelchanged(lvl, cfg)
 	if lvl==1 then
