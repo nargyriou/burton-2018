@@ -1,4 +1,5 @@
 local tprint = require("tprint")
+local bruteforme = require("bruteformes")
 
 local input = require "parsed.small"
 local mapvalues = require "mapvalues"
@@ -33,6 +34,8 @@ local input = {
   {T, T, T, T, T, T, M}
 }
 
+local rects = bruteforme(H)
+
 local tab = {}
 
 for _, row in pairs(input) do
@@ -41,7 +44,6 @@ for _, row in pairs(input) do
   for _, cell in pairs(row) do
     table.insert(r, {
       val = cell,
-      visited = 0,
       rects = {},
       filled = false
     })
@@ -50,26 +52,17 @@ for _, row in pairs(input) do
   table.insert(tab, r)
 end
 
-local rects = {
-  {1, 6},
-  {6, 1},
-  {2, 3},
-  {3, 2},
-  {2, 2}
-}
-
 function does_it_fit(tab, pos, rect, needed)
-  x, y = unpack(pos)
-  w, h = unpack(rect)
+  local x, y = unpack(pos)
+  local w, h = unpack(rect)
 
-  t_count = 0
-  m_count = 0
+  local t_count = 0
+  local m_count = 0
 
   print("does_it_fit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ", " .. needed .. ")")
 
   for i = y, y + h - 1 do
     for j = x, x + w - 1 do
-      print(i..","..j)
       if not tab[i] then return false end
       cell = tab[i][j]
 
@@ -85,26 +78,49 @@ function does_it_fit(tab, pos, rect, needed)
     end
   end
 
-  print("T: "..t_count.."; M: "..m_count)
-
   return (t_count >= needed) and (m_count >= needed)
 end
 
 function visit(tab, pos, rect)
-  x, y = unpack(pos)
-  w, h = unpack(rect)
-  rect = {x, y, w, h}
+  local x, y = unpack(pos)
+  local w, h = unpack(rect)
+  local rect = {x, y, w, h}
   print("visit(tab, " .. tprint(pos) .. ", " .. tprint(rect) .. ")")
 
   for i = y, y + h - 1 do
     for j = x, x + w - 1 do
       cell = tab[i][j]
-      cell.visited = cell.visited + 1
       table.insert(cell.rects, rect)
     end
   end
 
   return tab
+end
+
+local all_rects = {}
+
+function try_place(tab, rect)
+  local x, y, w, h = unpack(rect)
+
+  -- Check if everything can be filled
+  for i = y, y + h - 1 do
+    for j = x, x + w - 1 do
+      if tab[i][j].filled then
+        return false
+      end
+    end
+  end
+
+  table.insert(all_rects, rect)
+
+  -- and then fill the cells
+  for i = y, y + h - 1 do
+    for j = x, x + w - 1 do
+      tab[i][j].filled = true
+    end
+  end
+
+  return true
 end
 
 for _, rect in pairs(rects) do
@@ -117,5 +133,32 @@ for _, rect in pairs(rects) do
   end
 end
 
+function rect_sort(a, b)
+  local _, _, aw, ah = unpack(a)
+  local _, _, bw, bh = unpack(b)
+  local as = aw * ah
+  local bs = bw * bh
+  return as > bs
+end
+
+for n = 1, 20 do
+  for x = 1, C do
+    for y = 1, R do
+      cell = tab[y][x]
+      if not cell.filled then
+        if #cell.rects == n then
+          table.sort(cell.rects, rect_sort)
+          for _, rect in pairs(cell.rects) do
+            if try_place(tab, rect) then
+              break
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
 print(tprint(tab, {inline = false}))
+print(tprint(all_rects))
 
