@@ -1,9 +1,13 @@
 local gc= collectgarbage
+local mem = function() print("mem(MB):", string.format("%.2f", collectgarbage("count")/1024)) end
+mem()
 local tprint = require("tprint")
 local bruteforme = require("bruteformes")
 
+mem()
 local Input = require "parsed.big"
 print("Input loaded", #Input[1], #Input)
+mem()
 local mapvalues = require "mapvalues"
 
 
@@ -18,6 +22,7 @@ local H = Input.H -- 5
 
 local rects = bruteforme(H)
 print("bruteforme:", #rects)
+mem()
 
 local Rects = {}  -- tab[y][x].rects => Rects[y][x]
 local Filled = {} -- tab[y][x].filled => Filled[y][x]
@@ -32,8 +37,9 @@ end
 
 print("Rects:", #Rects[1], #Rects)
 print("Filled:", #Filled[1], #Filled)
+mem()
 
-function does_it_fit(pos, rect, needed)
+local function does_it_fit(pos, rect, needed)
   local x, y = unpack(pos)
   local w, h = unpack(rect)
 
@@ -63,7 +69,7 @@ function does_it_fit(pos, rect, needed)
   return (t_count >= needed) and (m_count >= needed)
 end
 
-function visit(pos, rect)
+local function visit(pos, rect)
   local x, y = unpack(pos)
   local w, h = unpack(rect)
   local rect = {x, y, w, h}
@@ -77,7 +83,7 @@ end
 
 local All_rects = {}
 
-function try_place(rect)
+local function try_place(rect)
   local x, y, w, h = unpack(rect)
 
   -- Check if everything can be filled
@@ -101,17 +107,21 @@ function try_place(rect)
   return true
 end
 
+mem()
+print("before ipairs(rects) => rect/C/R/does_it_fit/visit")
 for _, rect in ipairs(rects) do
   for x = 1, C do
+    print("does_it_fit: {"..x..",".."*".."} "..L)
     for y = 1, R do
       if does_it_fit({x, y}, rect, L) then
         visit({x, y}, rect)
       end
     end
+    mem()
   end
 end
 
-function rect_sort(a, b)
+local function rect_sort(a, b)
 --[[
   local _, _, aw, ah = unpack(a)
   local _, _, bw, bh = unpack(b)
@@ -122,6 +132,7 @@ function rect_sort(a, b)
   return (a[3]*a[4]) > (b[3]*b[4])
 end
 
+mem()
 print("BEGIN line 124")
 local val
 local nmax= 20 -- pourquoi 20 ? ca serait pas #rects ?
@@ -130,6 +141,7 @@ for n = 1, nmax do
   for x = 1, C do
     for y = 1, R do
       print("n="..n, "x="..x, "y="..y)
+      mem()
       val = Input[y][x]
       if not Filled[y][x] then
         if #Rects[y][x] == n then
