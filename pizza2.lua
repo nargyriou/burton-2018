@@ -2,6 +2,7 @@
 local args = arg
 local filename = (args[1] or "example")
 local bigger_first = true
+local passes = arg[2] or 1 
 
 local debugprint = function(msg, ...)
 	if #{...}>0 then
@@ -169,9 +170,12 @@ mem()
 debugprint("BEGIN line 124")
 
 local val
-local nmax= 20 -- pourquoi 20 ? ca serait pas #rects ?
-nma=#rects
+--local nmax= 20 -- pourquoi 20 ? ca serait pas #rects ?
+--nmax=100
+local nmax=#rects*passes
 for n = 1, nmax do
+  debugprint("pass:"..n.."/"..nmax.." "..math.floor(n/nmax*100).."%")
+  mem()
   for x = 1, C do
     for y = 1, R do
       --debugprint("n="..n, "x="..x, "y="..y)
