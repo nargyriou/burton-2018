@@ -1,12 +1,28 @@
-local gc= collectgarbage
-local mem = function() print("mem(MB):", string.format("%.2f", collectgarbage("count")/1024)) end
+
+local args = arg
+local filename = (args[1] or "example")
+local bigger_first = true
+
+local debugprint = function(msg, ...)
+	if #{...}>0 then
+		local t={msg}
+		for _i, o in ipairs({...}) do
+			table.insert(t, tostring(o))
+		end
+		msg = table.concat(t,"\t")
+	end
+	io.stderr:write(msg.."\n")
+end
+
+local gc = function(a) debugprint("gc()") collectgarbage() end
+local mem = function() debugprint("mem(MB):"..string.format("%.2f", collectgarbage("count")/1024)) end
 mem()
 local tprint = require("tprint")
 local bruteforme = require("bruteformes")
 
 mem()
-local Input = require "parsed.big"
-print("Input loaded", #Input[1], #Input)
+local Input = require ("parsed."..filename)
+debugprint("Input loaded", #Input[1], #Input)
 mem()
 local mapvalues = require "mapvalues"
 
@@ -21,7 +37,20 @@ local L = Input.L -- 1
 local H = Input.H -- 5
 
 local rects = bruteforme(H)
-print("bruteforme:", #rects)
+debugprint("bruteforme:", #rects)
+
+local order_desc = function(va,vb)
+	return (va[1]*va[2] > vb[1]*vb[2])
+end
+local order_asc = function(va,vb)
+	return (va[1]*va[2] < vb[1]*vb[2])
+end
+
+table.sort(rects, bigger_first and order_desc or order_asc)
+
+for _i,v in ipairs(rects) do
+	debugprint("", "-", v, v[1]*v[2])
+end
 mem()
 
 local Rects = {}  -- tab[y][x].rects => Rects[y][x]
@@ -35,8 +64,8 @@ for j, row in ipairs(Input) do
   end
 end
 
-print("Rects:", #Rects[1], #Rects)
-print("Filled:", #Filled[1], #Filled)
+debugprint("Rects:", #Rects[1], #Rects)
+debugprint("Filled:", #Filled[1], #Filled)
 mem()
 
 local function does_it_fit(pos, rect, needed)
@@ -46,7 +75,7 @@ local function does_it_fit(pos, rect, needed)
   local t_count = 0
   local m_count = 0
 
-  --print("does_it_fit(tprint(pos) .. ", " .. tprint(rect) .. ", " .. needed .. ")")
+  --debugprint("does_it_fit(tprint(pos) .. ", " .. tprint(rect) .. ", " .. needed .. ")")
 
   local val
   for j = y, y + h - 1 do
@@ -73,7 +102,7 @@ local function visit(pos, rect)
   local x, y = unpack(pos)
   local w, h = unpack(rect)
   local rect = {x, y, w, h}
-  --print("visit(tprint(pos) .. ", " .. tprint(rect) .. ")")
+  --debugprint("visit(tprint(pos) .. ", " .. tprint(rect) .. ")")
   for j = y, y + h - 1 do
     for i = x, x + w - 1 do
       table.insert(Rects[j][i], rect)
@@ -108,18 +137,22 @@ local function try_place(rect)
 end
 
 mem()
-print("before ipairs(rects) => rect/C/R/does_it_fit/visit")
+debugprint("# before ipairs(rects) => rect/C/R/does_it_fit/visit")
 for _, rect in ipairs(rects) do
   for x = 1, C do
-    print("does_it_fit: {"..x..",".."*".."} "..L)
+    --debugprint("does_it_fit: {"..x..",".."*".."} "..L)
     for y = 1, R do
       if does_it_fit({x, y}, rect, L) then
         visit({x, y}, rect)
       end
     end
-    mem()
   end
+  --gc()
+  --mem()
 end
+mem()
+gc();gc()
+mem()
 
 local function rect_sort(a, b)
 --[[
@@ -133,20 +166,20 @@ local function rect_sort(a, b)
 end
 
 mem()
-print("BEGIN line 124")
+debugprint("BEGIN line 124")
+
 local val
 local nmax= 20 -- pourquoi 20 ? ca serait pas #rects ?
 nma=#rects
 for n = 1, nmax do
   for x = 1, C do
     for y = 1, R do
-      print("n="..n, "x="..x, "y="..y)
-      mem()
+      --debugprint("n="..n, "x="..x, "y="..y)
+      --mem()
       val = Input[y][x]
       if not Filled[y][x] then
         if #Rects[y][x] == n then
           table.sort(Rects[y][x], rect_sort)
-gc()
           for _, rect in ipairs(Rects[y][x]) do
             if try_place(rect) then
               break
@@ -157,8 +190,12 @@ gc()
     end
   end
 end
-print("ENDED line 144")
--- print(tprint(Input, {inline = false}))
+mem()
+debugprint("ENDED line 144")
+-- debugprint(tprint(Input, {inline = false}))
+mem()
+gc();gc()
+mem()
 
 print(#All_rects)
 for _, rect in ipairs(All_rects) do
