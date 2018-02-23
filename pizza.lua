@@ -1,7 +1,7 @@
 local tprint = require("tprint")
 local bruteforme = require("bruteformes")
 
-local input = require "parsed.medium"
+local input = require "parsed.small"
 local mapvalues = require "mapvalues"
 
 
@@ -139,6 +139,12 @@ for n = 1, 20 do
   end
 end
 
-print(tprint(tab, {inline = false}))
-print(tprint(all_rects))
+-- print(tprint(tab, {inline = false}))
+
+print(#all_rects)
+for _, rect in pairs(all_rects) do
+  local x, y, w, h = unpack(rect)
+  -- out files indexes start at zero
+  print(table.concat({y - 1, x - 1, y + h - 2,  x + w - 2}, " "))
+end
 
