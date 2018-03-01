@@ -24,9 +24,10 @@ local function bullshit(data)
 
 			if v.step + ride.cost < ride.deadline then
 				-- on lui ajoute le ride i
-				table.insert(v.rides, {ride, v.step})
+				table.insert(v.rides, {ride, start=v.step})
 				v.n = v.n+1
 				v.step = v.step + ride.cost
+				ride.started_on = v.step
 				print("Ride " .. i .. " done")
 				break
 			end
@@ -44,6 +45,9 @@ local data = parse(fd)
 --print(tprint(data, {inline=false}))
 local t = bullshit(data)
 
-print(tprint(t, {inline=false}))
+print(tprint(data, {inline=false}))
+
+
+
 
 return bullshit
