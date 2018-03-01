@@ -1,3 +1,7 @@
+local function diff(start, finish)
+  return math.abs(start.col - finish.col) + math.abs(start.row - finish.row)
+end
+
 local function parser(fd)
   local firstline = fd:read("*l")
   local R,C,F,N,B,T = string.match(firstline, "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)")
@@ -17,7 +21,8 @@ local function parser(fd)
     if not txtline then break end
 
     local row_start, col_start, row_finish, col_finish, start, finish = string.match(firstline, "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)")
-    table.insert(data, {
+
+    local ride = {
       start={
         row=tonumber(row_start),
         col=tonumber(col_start),
@@ -28,7 +33,11 @@ local function parser(fd)
         col=tonumber(col_finish),
         step=tonumber(finish),
       }
-    })
+    }
+
+    ride.cost = diff(ride.start, ride.finish)
+
+    table.insert(data, ride)
   end
 
   data.R = R
