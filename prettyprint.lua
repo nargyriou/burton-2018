@@ -61,10 +61,10 @@ local function prettyprint(data)
 	return ""
 end
 
-local fd = io.open("datasets/b_should_be_easy.in", "r")
-local data = parse(fd)
--- --print(tprint(data, {inline=false}))
-local buff = prettyprint(data)
+-- local fd = io.open("datasets/b_should_be_easy.in", "r")
+-- local data = parse(fd)
+-- -- --print(tprint(data, {inline=false}))
+-- local buff = prettyprint(data)
 
 return prettyprint
 
