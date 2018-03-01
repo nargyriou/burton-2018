@@ -3,7 +3,6 @@ local fd = io.open('datasets/a_example.in', 'r')
 local data = parse(fd)
 local tprint = require('tprint')
 
-local total_of_points
 local rides_score = {}
 
 local function bonus_points(ride)
@@ -12,6 +11,16 @@ local function bonus_points(ride)
 	else
 		return 0
 	end
+end
+
+local function scoring()
+	local total_of_points = 0
+
+	for id_ride, ride  in ipairs( rides_score ) do
+		total_of_points = total_of_points + ride.points
+	end
+
+	return total_of_points
 end
 
 for id_ride, ride  in ipairs( data ) do
@@ -32,7 +41,4 @@ for id_ride, ride  in ipairs( data ) do
 end
 
 print(tprint(rides_score, {inline=false}))
-
---local function scoring ()
---end
-
+print("Total score = ", scoring())
