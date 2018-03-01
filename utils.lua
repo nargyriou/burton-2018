@@ -10,10 +10,12 @@ local function is_doable(ride, pos, step)
 end
 
 local function take_ride(car, ride, current_step)
-  local cost = diff(car.position, ride.start) + ride.cost
+  local pre_cost = diff(car.position, ride.start)
+  local cost = pre_cost + ride.cost
   car.position = ride.finish
   car.free = current_step + cost
   table.insert(car.rides, ride.id)
+  ride.started_on = current_step + pre_cost
 end
 
 local function output(cars)

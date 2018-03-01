@@ -32,7 +32,8 @@ local function parser(fd)
         row = tonumber(row_finish) + 1,
         col = tonumber(col_finish) + 1,
         step = tonumber(finish),
-      }
+      },
+      started_on = nil -- step at which the ride was took
     }
 
     ride.cost = utils.diff(ride.start, ride.finish)
@@ -43,10 +44,10 @@ local function parser(fd)
     table.insert(data, ride)
   end
 
-  data.R = R -- number of rows of the grid 
-  data.C = C -- number of columns of the grid 
-  data.F = F -- number of vehicles in the fleet 
-  data.N = N -- number of rides 
+  data.R = R -- number of rows of the grid
+  data.C = C -- number of columns of the grid
+  data.F = F -- number of vehicles in the fleet
+  data.N = N -- number of rides
   data.B = B -- per-ride bonus for starting the ride on time
   data.T = T -- number of steps in the simulation
 
