@@ -19,7 +19,7 @@ local function parser(fd)
 
     if not txtline then break end
 
-    local row_start, col_start, row_finish, col_finish, start, finish = string.match(firstline, "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)")
+    local row_start, col_start, row_finish, col_finish, start, finish = string.match(txtline, "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)")
 
     local ride = {
       id = current_id,
