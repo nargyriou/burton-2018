@@ -37,7 +37,7 @@ local function parser(fd)
     }
 
     ride.cost = utils.diff(ride.start, ride.finish)
-    ride.deadline = ride.finish.step - ride.cost
+    ride.deadline = ride.finish.step
 
     current_id = current_id + 1
 
