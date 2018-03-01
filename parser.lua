@@ -1,6 +1,4 @@
-local function diff(start, finish)
-  return math.abs(start.col - finish.col) + math.abs(start.row - finish.row)
-end
+local utils = require('utils')
 
 local function parser(fd)
   local firstline = fd:read("*l")
@@ -35,7 +33,8 @@ local function parser(fd)
       }
     }
 
-    ride.cost = diff(ride.start, ride.finish)
+    ride.cost = utils.diff(ride.start, ride.finish)
+    ride.deadline = ride.finish.step - ride.cost
 
     table.insert(data, ride)
   end
