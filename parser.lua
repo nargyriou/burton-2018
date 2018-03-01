@@ -37,6 +37,7 @@ end
 -- assert(fd)
 -- local t = parser(fd)
 
--- print(require("tprint")(t, {inline=false}))
+-- local tprint = require "tprint"
+-- print(tprint(t, {inline=false}))
 
 return parser
