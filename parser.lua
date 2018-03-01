@@ -13,6 +13,7 @@ local function parser(fd)
   assert(type(T) == "number", "T is invalid") -- number of steps in the simulation ( 1 ≤ T ≤ 10^9 )
 
   local data = {}
+  local current_id = 0
   while true do
     local txtline = fd:read("*l")
 
@@ -21,20 +22,23 @@ local function parser(fd)
     local row_start, col_start, row_finish, col_finish, start, finish = string.match(firstline, "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)")
 
     local ride = {
-      start={
-        row=tonumber(row_start),
-        col=tonumber(col_start),
-        step=tonumber(start),
+      id = current_id,
+      start = {
+        row = tonumber(row_start) + 1,
+        col = tonumber(col_start) + 1,
+        step = tonumber(start),
       },
-      finish={
-        row=tonumber(row_finish),
-        col=tonumber(col_finish),
-        step=tonumber(finish),
+      finish = {
+        row = tonumber(row_finish) + 1,
+        col = tonumber(col_finish) + 1,
+        step = tonumber(finish),
       }
     }
 
     ride.cost = utils.diff(ride.start, ride.finish)
     ride.deadline = ride.finish.step - ride.cost
+
+    current_id = current_id + 1
 
     table.insert(data, ride)
   end
