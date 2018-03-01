@@ -1,6 +1,7 @@
 local parser = require('parser')
 local tprint = require('tprint')
 local utils = require("utils")
+local scoring = require("scoring")
 
 local rides = parser(io.stdin)
 
@@ -33,4 +34,7 @@ utils.take_ride(cars[2], rides[2], current_step)
 
 utils.output(cars)
 
+scoring()
+
 -- vim:set noet sts=2 sw=2 ts=2:
+
