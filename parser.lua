@@ -18,21 +18,25 @@ local function parser(fd)
 		if not txtline then break end
 
 		for c in string.gmatch(txtline, " ?([0-9]+)") do
-			table.insert(row, c)
+			table.insert(row, tonumber(c))
 		end
 		table.insert(data, row)
 	end
-	data.R=R
-	data.C=C
-	data.L=L
-	data.H=H
+
+	data.R = R
+	data.C = C
+	data.F = F
+	data.N = N
+	data.B = B
+	data.T = T
+
 	return data
 end
 
-local fd = io.open("datasets/b_should_be_easy.in", "r")
-assert(fd)
-local t = parser(fd)
+-- local fd = io.open("datasets/b_should_be_easy.in", "r")
+-- assert(fd)
+-- local t = parser(fd)
 
-print(require("tprint")(t, {inline=false}))
+-- print(require("tprint")(t, {inline=false}))
 
 return parser
