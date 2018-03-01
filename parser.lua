@@ -39,12 +39,12 @@ local function parser(fd)
     table.insert(data, ride)
   end
 
-  data.R = R
-  data.C = C
-  data.F = F
-  data.N = N
-  data.B = B
-  data.T = T
+  data.R = R -- number of rows of the grid 
+  data.C = C -- number of columns of the grid 
+  data.F = F -- number of vehicles in the fleet 
+  data.N = N -- number of rides 
+  data.B = B -- per-ride bonus for starting the ride on time
+  data.T = T -- number of steps in the simulation
 
   return data
 end
