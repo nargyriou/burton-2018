@@ -2,6 +2,7 @@ local parse = require "parser"
 local tprint = require "tprint"
 local socket = require "socket"
 local utils = require "utils"
+local scoring = require "scoring"
 
 local function bullshit(data)
 	local vehicles = {}
@@ -47,7 +48,7 @@ local t = bullshit(data)
 
 print(tprint(data, {inline=false}))
 
-
+scoring (data)
 
 
 return bullshit
