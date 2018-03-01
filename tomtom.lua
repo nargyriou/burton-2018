@@ -34,7 +34,7 @@ utils.take_ride(cars[2], rides[2], current_step)
 
 utils.output(cars)
 
-scoring()
+scoring(rides)
 
 -- vim:set noet sts=2 sw=2 ts=2:
 
